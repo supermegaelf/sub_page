@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Информация о подписке и способах подключения">
+	<link rel="icon" type="image/x-icon" href="https://google.com/pic.png">
+	<title>VPN</title>
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+
+	<script>
+        const expireDateInit = "{% if not user.expire %}∞{% else %}{% set current_timestamp = now().timestamp() %}{{ user.expire | datetime }}{% endif %}";
+        let expireDateVar = expireDateInit.includes("∞") ? "∞" : new Date(expireDateInit).toLocaleString("ru-RU").replace(",", "")
+	</script>
+
+</head>
+<body>
+
+	<!-- <header>
+		<h1><img id="logo" src="/www/logo.png">Logo</h1>
+	</header> -->
+
+	<main>
+		<div class="modules">
+			<div class="module subscription">
+				<h3 class="module-title">Страница подписки</h3>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+						Статус<span>{% if user.status.value =='active' %}<div class="dot dot-green"></div>Активна{% elif user.status.value == 'limited' %}<div class="dot dot-yellow"></div>Ограничена{% elif user.status.value == 'expired' %}<div class="dot dot-red"></div>Истекла{% else %}<div class="dot dot-red"></div>Заблокирована{% endif %}</span>	
+				    </li>		
+				</ul>
+			</div>
+
+			<div class="module">
+				<h3 class="module-title">Выберите платформу, чтобы установить VPN:</h3>
+				<div class="accordion accordion-flush" id="accordionApps">
+					<div class="accordion-item">
+					    <h2 class="accordion-header" id="flush-heading-apps-ios">
+					    	<button class="accordion-button collapsed lh0" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse-apps-ios" aria-expanded="false" aria-controls="flush-collapse-apps-ios">iOS</button>
+					    </h2>
+					    <div id="flush-collapse-apps-ios" class="accordion-collapse collapse" aria-labelledby="flush-heading-apps-ios" data-bs-parent="#accordionApps">
+						    <div class="accordion-body">
+							    <h6 class="instructions-title">Следуйте инструкции:</h6>
+								<p>1. Нажмите "<a href="https://apps.apple.com/us/app/streisand/id6450534064" target="_blank" style="display: inline; text-decoration: underline; color: rgb(23,114,252);" class="link list-group-item list-group-item-action">Скачать приложение</a>", установите его и нажмите "Готово".</p>
+								<p>2. Нажмите "<a id="linkFix" href="https://google.com" target="_blank" style="display: inline; text-decoration: underline; color: rgb(23,114,252);" class="link list-group-item list-group-item-action">Добавить подписку</a>" и вернитесь на страницу подписки.</p>
+									
+								<script>
+									var a = document.getElementById('linkFix');
+									a.href = "streisand://import/" + window.location.href + "#Title";
+								</script>
+
+								<p>3. Нажмите "<a href="streisand://aW1wb3J0L3JvdXRlOi8vWW5Cc2FYTjBNRERWQVFJREJBVUdEaVVtSjFWeWRXeGxjMTFrYjIxaGFXNU5ZWFJqYUdWeVZHNWhiV1ZlWkc5dFlXbHVVM1J5WVhSbFozbFVkWFZwWktRSEV4Z2YxUWdKQ2dzTURRNFBFQkpiYjNWMFltOTFibVJVWVdkZFpHOXRZV2x1VFdGMFkyaGxjbFprYjIxaGFXNVNhWEJYYm1WMGQyOXlhMVprYVhKbFkzUldhSGxpY21sa29LRVJXR2RsYjJsd09uSjFWM1JqY0N4MVpIRFVGQlVLREEwT0ZoSmJiM1YwWW05MWJtUlVZV2RkWkc5dFlXbHVUV0YwWTJobGNxRVhXV1J2YldGcGJqcHlkZE1aR2dvYkRoeGJiM1YwWW05MWJtUlVZV2RkWkc5dFlXbHVUV0YwWTJobGNsVndjbTk0ZWFJZEhsbG5aM0JvZEM1amIyMVplWFJwYldjdVkyOXQxQ0FLQ3lFT0lpUU5YV1J2YldGcGJrMWhkR05vWlhKYmIzVjBZbTkxYm1SVVlXZWhJMThRRDJkbGIzTnBkR1U2ZVc5MWRIVmlaYUJVVWxWWlZGeEpVRWxtVG05dVRXRjBZMmhmRUNRMlFqSTJRVEkzUXkxQlFVRTJMVFEzT0RVdFFrTkZSaTB3TXpoRE0wSkRPREUxTUVFQUNBQVRBQmtBSndBc0FEc0FRQUJGQUZBQVhBQnFBSEVBZEFCOEFJTUFpZ0NMQUkwQWxnQ2VBS2NBc3dEQkFNTUF6UURVQU9BQTdnRDBBUGNCQVFFTEFSUUJJZ0V1QVRBQlFnRkRBVWdCVlFBQUFBQUFBQUlCQUFBQUFBQUFBQ2dBQUFBQUFBQUFBQUFBQUFBQUFBRjg=" target="_blank" style="display: inline; text-decoration: underline; color: rgb(23,114,252);" class="link list-group-item list-group-item-action">Добавить роутинг</a>".</p>
+                    			<p>4. Нажмите "Настройки" -> "Подписка" -> активируйте "Обновить при открытии" -> вернитесь в главное меню.</p>
+								<p>5. Нажмите "Главная" -> "Роутинг" -> выберите "RUYT" -> активируйте "Включить" -> вернитесь в главное меню.</p>
+                    			<p>6. Включите VPN, нажав на синюю кнопку.</p>
+							</div>
+					    </div>
+					 </div>
+				  	<div class="accordion-item">
+					    <h2 class="accordion-header" id="flush-heading-apps-android">
+					    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse-apps-android" aria-expanded="false" aria-controls="flush-collapse-apps-android">Android</button>
+					    </h2>
+					    <div id="flush-collapse-apps-android" class="accordion-collapse collapse" aria-labelledby="flush-heading-apps-android" data-bs-parent="#accordionApps">
+					    	<div class="accordion-body">
+							    <h6 class="instructions-title">Следуйте инструкции:</h6>
+								<p>1. Нажмите "<a href="https://play.google.com/store/apps/details?id=com.v2ray.ang" class="link list-group-item list-group-item-action" target="_blank" style="display: inline; text-decoration: underline; color: rgb(23,114,252);">Скачать приложение</a>", установите его и вернитесь на страницу подписки.</p>
+								<p>2. Нажмите "<a href="v2rayng://install-config?url={{ user.subscription_url }}&{{ user.username }}" target="_blank" style="display: inline; text-decoration: underline; color: rgb(23,114,252);" class="self-link link list-group-item list-group-item-action">Добавить подписку</a>".</p>
+								<p>3. Нажмите на три вертикальных точки -> "Обновить подписку".</p>
+								<p>3. Включите VPN, нажав на серую кнопку с галочкой.</p>
+							</div>
+					    </div>
+					 </div>
+					 <div class="accordion-item">
+					    <h2 class="accordion-header" id="flush-heading-apps-windows">
+					    	<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse-apps-windows" aria-expanded="false" aria-controls="flush-collapse-apps-windows">Windows</button>
+					    </h2>
+					    <div id="flush-collapse-apps-windows" class="accordion-collapse collapse" aria-labelledby="flush-heading-apps-windows" data-bs-parent="#accordionApps">
+					    	<div class="accordion-body">
+							    <h6 class="instructions-title">Следуйте инструкции:</h6>
+								<p>1. Нажмите "<a href="https://github.com/hiddify/hiddify-next/releases/download/v1.1.1/Hiddify-Windows-Setup-x64.exe" target="_blank" style="display: inline; text-decoration: underline; color: rgb(23,114,252);" class="link list-group-item list-group-item-action">Скачать приложение</a>", установите его и вернитесь на страницу подписки.</p>
+								<p>2. Нажмите "<a href="hiddify://install-config/?url={{ user.subscription_url }}" target="_blank" style="display: inline; text-decoration: underline; color: rgb(23,114,252);" class="self-link link list-group-item list-group-item-action">Добавить подписку</a>" -> "Открыть приложение "Hiddify"".</p>
+								<p>3. Включите VPN, нажав на белую круглую кнопку.</p>
+							</div>
+					    </div>
+					 </div>
+					 <div class="accordion-item">
+					    <h2 class="accordion-header" id="flush-heading-apps-macos">
+					    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse-apps-macos" aria-expanded="false" aria-controls="flush-collapse-apps-macos">macOS</button>
+					    </h2>
+					    <div id="flush-collapse-apps-macos" class="accordion-collapse collapse" aria-labelledby="flush-heading-apps-macos" data-bs-parent="#accordionApps">
+					    	<div class="accordion-body">		    
+							    <h6 class="instructions-title">Следуйте инструкции:</h6>
+								<p>1. Нажмите "<a href="https://github.com/hiddify/hiddify-next/releases/download/v0.14.20/hiddify-macos-universal.zip" target="_blank" style="display: inline; text-decoration: underline; color: rgb(23,114,252);" class="link list-group-item list-group-item-action">Скачать приложение</a>", установите его и вернитесь на страницу подписки.</p>
+								<p>2. Нажмите "<a href="hiddify://install-config/?url={{ user.subscription_url }}" target="_blank" style="display: inline; text-decoration: underline; color: rgb(23,114,252);" class="self-link link list-group-item list-group-item-action">Добавить подписку</a>".</p>
+								<p>3. Включите VPN, нажав на белую круглую кнопку.</p>
+							</div>
+					    </div>
+					 </div>
+				</div>
+			</div>
+		</div>
+	</body>
+
+	<style>
+
+		html {
+		    margin: auto;
+		    max-width: 520px;
+		    min-width: 300px;
+		    padding: 0 25px 50px 25px;
+		}
+
+		.dot {
+			height: 10px;
+			width: 10px;
+			border-radius: 50%;
+			display: inline-block;
+			margin-right: 5px;	
+		}
+
+		.dot-red {
+			background-color: #bf1d11;
+		}
+
+		.dot-green {
+			background-color: green;
+		}
+
+		.dot-yellow {
+			background-color: #ffbe0a;
+		}
+
+		.app-icon {
+			margin-right: 8px;
+		}
+
+		.img-help {
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
+
+		.subscription li {
+			padding-top: 10px;
+			padding-bottom: 10px;
+		}
+
+		.accordion-body .list-group {
+			padding-bottom: 5px;
+		}
+
+		.accordion, 
+		.subscription .list-group {
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+		    border-radius: 15px;
+		    overflow: hidden;
+		}
+
+		.accordion .list-group {
+			padding-top: 0px;
+		    --bs-list-group-item-padding-x: 5px;
+		}
+
+		.lh0 {
+			line-height: 0;
+		}
+
+		.instructions {
+			margin-top: 15px;
+		}
+
+		.instructions p {
+			margin-bottom: 10px;
+		}
+
+		.instructions-title {
+			margin: 10px 0;
+			font-size: 22.5px;
+			margin-bottom: 15px;
+		}
+
+		.link {
+			display: flex;
+		}
+
+		.link-icon {
+			width: 25px;
+			height: 25px;
+			margin-left: auto;
+		}
+
+		.module-title {
+			margin-top: 25px;
+			margin-bottom: 25px;
+			font-size: 25px;
+		}
+
+		.module-title-2 {
+			font-size: 22.5px;
+		}
+
+		.accordion-button:not(.collapsed) {
+			background-color: #DCDCDC;
+			color: var(--bs-accordion-btn-color)
+		}
+
+		.accordion-button:focus {
+			box-shadow: none;
+			border-color: white;
+		}
+
+		.form-check-input:focus {
+			box-shadow: none;
+		}
+
+		#toast {
+			visibility: hidden;
+		    width: fit-content;
+		    margin: auto;
+		    color: #000;
+		    text-align: center;
+		    position: fixed;
+		    z-index: 1;
+		    left: 0;
+		    right: 0;
+		    top: 45px;
+		    font-size: 16px;
+			overflow: hidden;
+			white-space: nowrap;
+		}
+
+		#toast.show {
+		    visibility: visible;
+		    animation: fadein 1s, fadeout 1s 2s;
+		}
+
+		@keyframes fadein {
+		    from {
+		        top: 0;
+		        opacity: 0;
+		    }
+		    to {
+		        top: 45px;
+		        opacity: 1
+		    }
+		}
+
+		@keyframes fadeout {
+		    from {
+		        top: 45px;
+		        opacity: 1;
+		    }
+		    to {
+		        top: 0;
+		        opacity: 0;
+		    }
+		}
+
+		[data-bs-theme=light] .form-check-input:focus {
+			border-color: #dee2e6;
+			--bs-form-switch-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%280, 0, 0, 0.25%29'/%3e%3c/svg%3e");
+		}
+
+
+
+		/* Full dark theme */
+		[data-bs-theme=dark] .link-dark {
+			color: #dee2e6 !important; 
+			text-decoration: none;
+		}
+
+		[data-bs-theme=dark] #toast {
+			color: var(--bs-list-group-color)
+		}
+
+		[data-bs-theme=dark] svg {
+			filter: invert(100%) sepia(10%) saturate(7500%) hue-rotate(198deg) brightness(120%) contrast(108%);
+		}
+
+		[data-bs-theme=dark] *,
+		[data-bs-theme=dark] .subscription .list-group-item span, 
+		{
+		    background-color: #181818;
+		}
+
+		[data-bs-theme=dark] .accordion-button,
+		[data-bs-theme=dark] .subscription .list-group-item,
+		[data-bs-theme=dark] .subscription .list-group-item > *
+		{
+		    background-color: #282828;
+		}
+
+		[data-bs-theme=dark] .accordion-button:not(.collapsed) {
+			background-color: #383838;
+		}
+
+	</style>
+
+	<script type="text/javascript">
+
+		function showNotification(notificationElementId) {
+		  	let notification = document.getElementById(notificationElementId)
+		    notification.className = "show";
+		    setTimeout(() => { 
+		    	notification.className = notification.className.replace("show", ""); 
+		    }, 2900);
+		}
+		
+		function copyToClipboard(text) {
+			navigator.clipboard.writeText(text);
+		}
+
+		const buttonSwitchTheme = document.getElementById('btnSwitchTheme');
+		buttonSwitchTheme.checked = currentThemeSetting === 'dark';
+		buttonSwitchTheme.addEventListener("click", () => {
+			  const newTheme = currentThemeSetting === "dark" ? "light" : "dark";
+			  setTheme(newTheme);			  
+		});
+
+		const links = document.getElementsByClassName('self-link');
+		Array.from(links).forEach(link => {
+			link.href = link.href.replace('{link}', window.location.href);
+		});
+
+	</script>
+</html>
